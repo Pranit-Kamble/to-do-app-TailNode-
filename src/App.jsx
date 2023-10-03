@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import './App.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+
+
 
 const App = () => {
   const [name,setName]=useState('')
@@ -18,31 +22,36 @@ const App = () => {
       }
     }
   },[todo])
+  
+  const generateRandomId = () => {
+    return Math.random().toString(36).substr(2, 9);
+  };
 
   const handleAdd=(e)=>{
     if(e.key==='Enter'){
-      setTodo(prevArray => [...prevArray, {task:name,completed:false}])
+      setTodo(prevArray => [...prevArray, {task:name,completed:false,id:generateRandomId()}])
       
       document.getElementsByClassName('input-text')[0].value=''
     }
   }
-  const handleClick=(e,oldIndex,newIndex)=>{
+  const handleClick=(data)=>{
     const updatedTodos = [...todo];
-    updatedTodos[e.target.id].completed = true;
-    setTodo(updatedTodos);
+    const findItem = updatedTodos.find(item => item.id === data.id);
+    const itemToMove = {task:findItem.task,id:findItem.id,completed:true}
+    console.log(itemToMove)
+    const newArrayWithoutItem = updatedTodos.filter(item => item.id !== data.id);
+    newArrayWithoutItem.push(itemToMove);
+    setTodo(newArrayWithoutItem);
+    // setTodo(updatedTodos);
     console.log(todo);
     setCount(count+1)
-    // const newTodo = [...todo];
-    // const element = newTodo[oldIndex];
-    // newTodo.splice(oldIndex, 1);
-    // newTodo.splice(newIndex, 0, element);
-    // setTodo(newTodo);
-    
- 
   }
   const handleReset=()=>{
     setTodo([])
   }
+  // const handleDelete=(idx)=>{
+  //   console.log(idx)
+  // }
   return (
     <div className='container' >
       <h1>To-Do-App</h1>
@@ -59,7 +68,9 @@ const App = () => {
               return(
                 <div key={idx} className='todo'>
                   <div className='todo-name'>{data.task}</div>
-                  <button className='complete-btn' id={idx} onClick={(e)=>{handleClick(e,idx,todo.length-1)}} >complete</button>
+                  <button className='complete-btn' id={idx} onClick={()=>{handleClick(data)}} >complete</button>
+              
+                   {/* <button id={idx} onClick={(e)=>handleDelete(e)}><FontAwesomeIcon style={{color:'red'}} size='2x' icon={faTrashCan} /> </button> */}
                 </div>
               )
             })

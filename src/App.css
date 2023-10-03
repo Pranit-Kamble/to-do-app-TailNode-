@@ -71,6 +71,10 @@ img{
     box-shadow: 5px 5px 2px gray;
     height: 30px;
 }
+.todo-name{
+    font-size: 20px;
+    font-weight: bold;
+}
 .complete-btn{
     background-color: rgb(28, 208, 64);
     border: none;
